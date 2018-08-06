@@ -53,6 +53,8 @@ class Actor:
         self.action_range = self.action_high - self.action_low
 
         # Initialize any other variables here
+        
+        self.dropout = 0.2
 
         self.build_model()
 
