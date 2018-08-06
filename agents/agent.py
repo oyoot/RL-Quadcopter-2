@@ -186,7 +186,7 @@ class DDPG():
         self.batch_size = 64
         self.memory = ReplayBuffer(self.buffer_size, self.batch_size)
 
-        self.best_score = 0.0
+        self.best_score = -10000000000000
         
         # Algorithm parameters
         self.gamma = 0.99  # discount factor
