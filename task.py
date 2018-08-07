@@ -28,28 +28,19 @@ class Task():
 
     def get_reward(self):
         """Uses current pose of sim to return reward."""
-        #reward = 1-0.003*(abs(self.sim.pose[:3] - self.target_pos)).sum()
-        #Write your own reward function
+        reward = 0.02
+        reward += min(self.sim.v[2], 2.0)
+        reward -= 0.005*((self.sim.v[0])** 2 + (self.sim.v[1])**2)
+        reward -= 0.005*((self.sim.pose[0])**2 + (self.sim.pose[1])**2)
+        reward -= 0.02*(abs(np.sin(self.sim.pose[3]))**2 + abs(np.sin(self.sim.pose[4]))**2 + abs(np.sin(self.sim.pose[5]))**2)
         
-        penalty = 0
-        reward  = 0
+        d = (self.sim.pose[:3] - self.target_pos)
         
-        penalty += 0.02*(abs(self.sim.v[0])**2 + abs(self.sim.v[1])**2)
-        penalty += 1000000*abs(self.sim.v[:2] - self.target_pos[:2]).sum()
-        penalty += 1000000*(abs(self.sim.pose[:3] - self.target_pos).sum())
-        if (abs(self.sim.pose[2] - 10) > 5):
-            penalty += 10
+        reward -= 0.3*(np.dot(d,d))
         
-        reward += min(self.sim.v[2], 1000*self.sim.v[2])
-        if (abs(self.sim.pose[2] - 10.0) < 2.0):
-            reward += 1000
-        
-        reward += 10
-        reward = reward - penalty
-        
-        if reward >= 1:
+        if reward > 1:
             reward = 1
-        elif reward <= -1:
+        elif reward < -1:
             reward = -1
         
         return reward
@@ -64,7 +55,7 @@ class Task():
             pose_all.append(self.sim.pose)
         next_state = np.concatenate(pose_all)
         return next_state, reward, done
-    
+
     def reset(self):
         """Reset the sim to start a new episode."""
         self.sim.reset()
