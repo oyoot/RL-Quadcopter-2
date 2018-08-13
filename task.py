@@ -1,5 +1,6 @@
 import numpy as np
 from physics_sim import PhysicsSim
+import math
 
 class Task():
     """Task (environment) that defines the goal and provides feedback to the agent."""
@@ -30,7 +31,8 @@ class Task():
         """Uses current pose of sim to return reward."""
         reward = 1.-.3*(abs(self.sim.pose[:3] - self.target_pos)).sum()
         return reward
-
+    
+    
     def step(self, rotor_speeds):
         """Uses action to obtain next state, reward, done."""
         reward = 0
